@@ -1,3 +1,4 @@
+using Azure;
 using Azure.Core;
 using Azure.Identity;
 using Azure.ResourceManager;
@@ -100,11 +101,11 @@ static async Task TryProvisionCosmosWithArmAsync(TokenCredential credential, App
         dynamic cosmosAccount = armDyn.GetCosmosDBAccountResource(new Azure.Core.ResourceIdentifier(cosmosAccountResourceId));
 
         dynamic dbCollection = cosmosAccount.GetCosmosDBSqlDatabaseCollection();
-        await dbCollection.CreateOrUpdateAsync(WaitUntil.Completed, config.CosmosDbDatabase, null);
+        await dbCollection.CreateOrUpdateAsync(Azure.WaitUntil.Completed, config.CosmosDbDatabase, null);
 
         dynamic db = await dbCollection.GetAsync(config.CosmosDbDatabase);
         dynamic containerCollection = db.Value.GetCosmosDBSqlContainerCollection();
-        await containerCollection.CreateOrUpdateAsync(WaitUntil.Completed, config.CosmosDbContainer, null);
+        await containerCollection.CreateOrUpdateAsync(Azure.WaitUntil.Completed, config.CosmosDbContainer, null);
     }
     catch
     {
