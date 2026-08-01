@@ -1,5 +1,4 @@
 using Azure;
-using Azure.Core;
 using Azure.Identity;
 using Azure.ResourceManager;
 using Azure.ResourceManager.CosmosDB;
@@ -18,7 +17,7 @@ var managedIdentityCredential = new DefaultAzureCredential(new DefaultAzureCrede
     ManagedIdentityClientId = config.ManagedIdentityClientId
 });
 
-builder.Services.AddSingleton<TokenCredential>(_ => managedIdentityCredential);
+builder.Services.AddSingleton<global::Azure.Core.TokenCredential>(_ => managedIdentityCredential);
 builder.Services.AddSingleton<CosmosClient>(_ => new CosmosClient(config.CosmosDbUri, managedIdentityCredential));
 
 builder.Services.AddControllers()
@@ -65,7 +64,7 @@ static AppConfig LoadConfigFromEnvironment()
 
 static async Task ProvisionCosmosDatabaseAndContainerAsync(IServiceProvider services, AppConfig config)
 {
-    var credential = services.GetRequiredService<TokenCredential>();
+    var credential = services.GetRequiredService<global::Azure.Core.TokenCredential>();
     var cosmosClient = services.GetRequiredService<CosmosClient>();
 
     // Best-effort ARM provisioning.
